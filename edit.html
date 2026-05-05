@@ -1,18 +1,105 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Editar</title>
+    <meta charset="UTF-8">
+    <title>Editar Peça - Estoque Inova</title>
+    <style>
+        /* CSS básico para deixar a página com visual de sistema corporativo */
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f4f4f9; 
+            padding: 40px; 
+        }
+        .container { 
+            max-width: 450px; 
+            margin: 0 auto; 
+            background: #ffffff; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+        }
+        h2 { 
+            color: #333; 
+            text-align: center; 
+            margin-bottom: 20px;
+        }
+        .form-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            font-weight: bold; 
+            margin-bottom: 5px; 
+            color: #555; 
+        }
+        input[type="text"], input[type="number"] { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            box-sizing: border-box; /* Garante que o padding não quebre o tamanho */
+        }
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background-color: #0056b3; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            margin-top: 10px;
+        }
+        button:hover { 
+            background-color: #004494; 
+        }
+        .back-link { 
+            display: block; 
+            text-align: center; 
+            margin-top: 15px; 
+            text-decoration: none; 
+            color: #888; 
+            font-size: 14px;
+        }
+        .back-link:hover {
+            color: #333;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Editar Contato</h2>
+<div class="container">
+    <h2>Editar Item do Estoque</h2>
 
-<form action="/update/{{ dado.id }}" method="post">
-    <input type="text" name="nome" value="{{ dado.nome }}">
-    <input type="email" name="email" value="{{ dado.email }}">
-    <input type="text" name="celular" value="{{ dado.celular }}">
-    <button type="submit">Atualizar</button>
-</form>
+    <!-- O ID (chave primária) não deve ser editado pelo usuário, ele vai apenas na URL -->
+    <form action="/update/{{ dado.Id }}" method="post">
+        
+        <div class="form-group">
+            <label for="sku">SKU (Código da Peça):</label>
+            <input type="text" id="sku" name="sku" value="{{ dado.SKU }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="nome">Nome / Descrição:</label>
+            <input type="text" id="nome" name="nome" value="{{ dado.Nome }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="quantidade">Quantidade em Estoque:</label>
+            <input type="number" id="quantidade" name="quantidade" value="{{ dado.Quantidade }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="preco">Preço Unitário (R$):</label>
+            <!-- step="0.01" permite que o HTML aceite números quebrados (centavos) -->
+            <input type="number" step="0.01" id="preco" name="preco" value="{{ dado.Preco }}" required>
+        </div>
+
+        <button type="submit">Atualizar Peça</button>
+    </form>
+
+    <a href="/" class="back-link">Cancelar e Voltar</a>
+</div>
 
 </body>
 </html>

@@ -4,11 +4,11 @@ import os
 
 app = Flask(__name__)
 
-# CONFIGURAÇÃO DO BANCO (ajuste com seus dados da Azure)
+
 server = os.getenv("DB_SERVER")
 database = os.getenv("DB_NAME")
 username = os.getenv("DB_USER")
-# NÃO UTILIZE OS CARACTERES: "@", "!", "&" NA SENHA -> Gera problemas na conexão
+
 password = os.getenv("DB_PASSWORD")
 
 conn_str = (
@@ -29,7 +29,7 @@ def get_connection():
 def index():
     conn = get_connection()
     cursor = conn.cursor()
-    # Busca os dados da tabela nova
+    
     cursor.execute("SELECT * FROM estoque_inova")
     dados = cursor.fetchall()
     conn.close()
@@ -37,7 +37,7 @@ def index():
 
 @app.route('/add', methods=['POST'])
 def add():
-    # Recebe os novos campos do formulário HTML
+  
     id_peca = request.form['id']
     sku = request.form['sku']
     nome = request.form['nome']
@@ -46,7 +46,7 @@ def add():
 
     conn = get_connection()
     cursor = conn.cursor()
-    # Insere na tabela estoque_inova
+    
     cursor.execute("""
         INSERT INTO estoque_inova (Id, SKU, Nome, Quantidade, Preco) 
         VALUES (?, ?, ?, ?, ?)
@@ -61,7 +61,7 @@ def add():
 def delete(id):
     conn = get_connection()
     cursor = conn.cursor()
-    # Deleta com base no ID da nova tabela
+   
     cursor.execute("DELETE FROM estoque_inova WHERE Id = ?", (id,))
     conn.commit()
     conn.close()
@@ -72,7 +72,7 @@ def delete(id):
 def edit(id):
     conn = get_connection()
     cursor = conn.cursor()
-    # Seleciona o item especifico pelo ID
+  
     cursor.execute("SELECT * FROM estoque_inova WHERE Id = ?", (id,))
     dado = cursor.fetchone()
     conn.close()
@@ -81,7 +81,7 @@ def edit(id):
 
 @app.route('/update/<int:id>', methods=['POST'])
 def update(id):
-    # Recebe os campos editados do formulário
+   
     sku = request.form['sku']
     nome = request.form['nome']
     quantidade = request.form['quantidade']
@@ -89,7 +89,7 @@ def update(id):
 
     conn = get_connection()
     cursor = conn.cursor()
-    # Atualiza as informações mantendo o mesmo ID
+   
     cursor.execute("""
         UPDATE estoque_inova
         SET SKU=?, Nome=?, Quantidade=?, Preco=?

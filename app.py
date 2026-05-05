@@ -29,21 +29,29 @@ def get_connection():
 def index():
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM contatos")
+    # Busca os dados da tabela nova
+    cursor.execute("SELECT * FROM estoque_inova")
     dados = cursor.fetchall()
     conn.close()
     return render_template('index.html', dados=dados)
 
 @app.route('/add', methods=['POST'])
 def add():
+    # Recebe os novos campos do formulário HTML
+    id_peca = request.form['id']
+    sku = request.form['sku']
     nome = request.form['nome']
-    email = request.form['email']
-    celular = request.form['celular']
+    quantidade = request.form['quantidade']
+    preco = request.form['preco']
 
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO contatos (nome, email, celular) VALUES (?, ?, ?)",
-                   (nome, email, celular))
+    # Insere na tabela estoque_inova
+    cursor.execute("""
+        INSERT INTO estoque_inova (Id, SKU, Nome, Quantidade, Preco) 
+        VALUES (?, ?, ?, ?, ?)
+    """, (id_peca, sku, nome, quantidade, preco))
+    
     conn.commit()
     conn.close()
 
@@ -53,7 +61,8 @@ def add():
 def delete(id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM contatos WHERE id = ?", (id,))
+    # Deleta com base no ID da nova tabela
+    cursor.execute("DELETE FROM estoque_inova WHERE Id = ?", (id,))
     conn.commit()
     conn.close()
 
@@ -63,7 +72,8 @@ def delete(id):
 def edit(id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM contatos WHERE id = ?", (id,))
+    # Seleciona o item especifico pelo ID
+    cursor.execute("SELECT * FROM estoque_inova WHERE Id = ?", (id,))
     dado = cursor.fetchone()
     conn.close()
 
@@ -71,17 +81,21 @@ def edit(id):
 
 @app.route('/update/<int:id>', methods=['POST'])
 def update(id):
+    # Recebe os campos editados do formulário
+    sku = request.form['sku']
     nome = request.form['nome']
-    email = request.form['email']
-    celular = request.form['celular']
+    quantidade = request.form['quantidade']
+    preco = request.form['preco']
 
     conn = get_connection()
     cursor = conn.cursor()
+    # Atualiza as informações mantendo o mesmo ID
     cursor.execute("""
-        UPDATE contatos
-        SET nome=?, email=?, celular=?
-        WHERE id=?
-    """, (nome, email, celular, id))
+        UPDATE estoque_inova
+        SET SKU=?, Nome=?, Quantidade=?, Preco=?
+        WHERE Id=?
+    """, (sku, nome, quantidade, preco, id))
+    
     conn.commit()
     conn.close()
 

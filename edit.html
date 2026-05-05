@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar</title>
+</head>
+<body>
+
+<h2>Editar Contato</h2>
+
+<form action="/update/{{ dado.id }}" method="post">
+    <input type="text" name="nome" value="{{ dado.nome }}">
+    <input type="email" name="email" value="{{ dado.email }}">
+    <input type="text" name="celular" value="{{ dado.celular }}">
+    <button type="submit">Atualizar</button>
+</form>
+
+</body>
+</html>
